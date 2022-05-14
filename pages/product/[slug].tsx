@@ -1,12 +1,26 @@
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
+import {
+  NextPage,
+  GetServerSideProps,
+  GetStaticPaths,
+  GetStaticProps,
+} from "next";
+
 import { ShopLayout } from "../../components/layouts/ShopLayout";
 import { ProductSlideshow, SizeSelector } from "../../components/products";
 import { ItemCounter } from "../../components/ui";
-import { initialData } from "../../database/products";
+import { dbProducts } from "../../database";
+import { IProduct } from "../../interfaces";
 
-const product = initialData.products[0];
 
-const ProductPage = () => {
+interface Props {
+  product: IProduct;
+}
+
+const ProductPage: NextPage<Props> = ({ product }) => {
+  // const router = useRouter()
+  // const { products: product, isLoading } = useProducts<IProduct>(`/products/${router.query.slug}`)
+
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
       <Grid container spacing={3}>
@@ -52,5 +66,58 @@ const ProductPage = () => {
     </ShopLayout>
   );
 };
+
+export const getStaticPaths: GetStaticPaths = async (ctx) => {
+  const slugs = await dbProducts.getAllProductSlugs();
+
+  return {
+    paths: slugs.map(({ slug }) => ({ params: { slug } })),
+    fallback: "blocking",
+  };
+};
+
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+
+  const { slug = '' } = params as { slug: string }
+
+  const product = await dbProducts.getProductBySlug(slug)
+
+  if(!product) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+      product
+    },
+    revalidate: 86400
+  }
+}
+
+// export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+//   const { slug = '' } = params as { slug: string };
+//   const product = await dbProducts.getProductBySlug(slug)
+
+//   if(!product){
+//     return {
+//       redirect: {
+//         destination: '/',
+//         permanent: false
+//       }
+//     }
+//   }
+
+//   return {
+//     props: {
+//       product
+//     }
+//   }
+// }
 
 export default ProductPage;
