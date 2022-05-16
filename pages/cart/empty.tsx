@@ -1,5 +1,5 @@
 import NextLink from 'next/link';
-import { RemoveShoppingCartOutlined } from "@mui/icons-material";
+import RemoveShoppingCartOutlined from "@mui/icons-material/RemoveShoppingCartOutlined";
 import { Box, Link, Typography } from "@mui/material";
 import { ShopLayout } from "../../components/layouts";
 

@@ -11,10 +11,8 @@ import {
 } from "@mui/material";
 import { CartList, OrderSummary } from "../../components/cart";
 import { ShopLayout } from "../../components/layouts/ShopLayout";
-import {
-  CreditCardOffOutlined,
-  CreditScoreOutlined,
-} from "@mui/icons-material";
+// import CreditCardOffOutlined from "@mui/icons-material/CreditCardOffOutlined";
+import CreditScoreOutlined from "@mui/icons-material/CreditScoreOutlined";
 
 const OrdenPage = () => {
   return (

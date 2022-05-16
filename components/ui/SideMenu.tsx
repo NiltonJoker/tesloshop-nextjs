@@ -1,3 +1,4 @@
+import { useContext, useState } from "react";
 import {
   Box,
   Divider,
@@ -11,25 +12,33 @@ import {
   ListItemText,
   ListSubheader,
 } from "@mui/material";
-import {
-  AccountCircleOutlined,
-  AdminPanelSettings,
-  CategoryOutlined,
-  ConfirmationNumberOutlined,
-  EscalatorWarningOutlined,
-  FemaleOutlined,
-  LoginOutlined,
-  MaleOutlined,
-  SearchOutlined,
-  VpnKeyOutlined,
-} from "@mui/icons-material";
+
 import { UiContext } from "../../context";
-import { useContext } from "react";
 import { useRouter } from "next/router";
+
+import SearchOutlined from "@mui/icons-material/SearchOutlined";
+import AccountCircleOutlined from "@mui/icons-material/AccountCircleOutlined";
+import ConfirmationNumberOutlined from "@mui/icons-material/ConfirmationNumberOutlined";
+import MaleOutlined from "@mui/icons-material/MaleOutlined";
+import FemaleOutlined from "@mui/icons-material/FemaleOutlined";
+import EscalatorWarningOutlined from "@mui/icons-material/EscalatorWarningOutlined";
+import VpnKeyOutlined from "@mui/icons-material/VpnKeyOutlined";
+import CategoryOutlined from "@mui/icons-material/CategoryOutlined";
+import LoginOutlined from "@mui/icons-material/LoginOutlined";
+import AdminPanelSettings from "@mui/icons-material/AdminPanelSettings";
 
 export const SideMenu = () => {
   const router = useRouter();
   const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const onSearchTerm = () => {
+    if (searchTerm.trim().length === 0) return;
+
+    navigateTo(`/search/${searchTerm}`);
+    setSearchTerm("")
+  };
 
   const navigateTo = (url: string) => {
     router.push(url);
@@ -48,10 +57,14 @@ export const SideMenu = () => {
           <ListItem>
             <Input
               type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              autoFocus
+              onKeyPress={(e) => (e.key === "Enter" ? onSearchTerm() : null)}
               placeholder="Buscar..."
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton aria-label="toggle password visibility">
+                  <IconButton aria-label="toggle password visibility" onClick={onSearchTerm}>
                     <SearchOutlined />
                   </IconButton>
                 </InputAdornment>
@@ -77,7 +90,7 @@ export const SideMenu = () => {
             button
             sx={{ display: { xs: "", sm: "none" } }}
             onClick={() => navigateTo("/category/men")}
-            selected={ router.asPath === '/category/men' }
+            selected={router.asPath === "/category/men"}
           >
             <ListItemIcon>
               <MaleOutlined />
@@ -89,7 +102,7 @@ export const SideMenu = () => {
             button
             sx={{ display: { xs: "", sm: "none" } }}
             onClick={() => navigateTo("/category/women")}
-            selected={ router.asPath === '/category/women' }
+            selected={router.asPath === "/category/women"}
           >
             <ListItemIcon>
               <FemaleOutlined />
@@ -101,7 +114,7 @@ export const SideMenu = () => {
             button
             sx={{ display: { xs: "", sm: "none" } }}
             onClick={() => navigateTo("/category/kid")}
-            selected={ router.asPath === '/category/kid' }
+            selected={router.asPath === "/category/kid"}
           >
             <ListItemIcon>
               <EscalatorWarningOutlined />

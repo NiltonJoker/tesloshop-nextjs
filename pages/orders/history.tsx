@@ -3,7 +3,7 @@ import { Chip, Grid, Link, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 
 import { ShopLayout } from "../../components/layouts";
-import { RemoveRedEyeOutlined } from "@mui/icons-material";
+import RemoveRedEyeOutlined from "@mui/icons-material/RemoveRedEyeOutlined";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 100 },
