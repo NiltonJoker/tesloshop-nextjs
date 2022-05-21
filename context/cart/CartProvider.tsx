@@ -1,28 +1,59 @@
-import { FC, ReactNode, useReducer } from 'react';
-import { ICartProduct } from '../../interfaces';
-import { CartContext, cartReducer } from './';
+import { FC, ReactNode, useReducer } from "react";
+import { ICartProduct } from "../../interfaces";
+import { CartContext, cartReducer } from "./";
 
 interface Props {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export interface CartState {
- cart: ICartProduct[];
+  cart: ICartProduct[];
 }
 
 const Cart_INITIAL_STATE: CartState = {
- cart: [],
-}
+  cart: [],
+};
 
-export const CartProvider:FC<Props> = ({ children }) => {
+export const CartProvider: FC<Props> = ({ children }) => {
+  const [state, dispatch] = useReducer(cartReducer, Cart_INITIAL_STATE);
 
- const [state, dispatch] = useReducer(cartReducer, Cart_INITIAL_STATE)
+  const addProductToCart = (product: ICartProduct) => {
 
- return (
-   <CartContext.Provider value={{
-     ...state
-   }}>
-     { children }
-   </CartContext.Provider>
- )
-}
+    const existInCart = state.cart.some(item => item._id === product._id && item.size === product.size)
+
+    if(!existInCart) {
+      return dispatch({
+        type:'[Cart] - Update Product in cart',
+        payload: [...state.cart, product]
+      })
+    }
+
+    const updatedProducts = state.cart.map(item => {
+      if(item._id === product._id && item.size === product.size){
+        return {
+          ...item,
+          quantity: item.quantity + product.quantity
+        }
+      }
+      return item
+    })
+  
+    dispatch({
+      type: '[Cart] - Update Product in cart',
+      payload: updatedProducts
+    })
+
+  }
+  
+
+  return (
+    <CartContext.Provider
+      value={{
+        ...state,
+        addProductToCart
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
+};
